@@ -5,4 +5,4 @@ test:
 	@go test -v ./...
 
 bench:
-	@go test ./... -bench . -benchmem
+	@go test -v ./... -bench . -benchmem
