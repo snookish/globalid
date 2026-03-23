@@ -4,8 +4,6 @@
 
 It is safe for concurrent use and supports custom clocks, automatic machine ID detection, and batch generation.
 
----
-
 ## ID Structure
 
 Each ID is a 64-bit integer composed of:
@@ -18,8 +16,6 @@ Each ID is a 64-bit integer composed of:
 * **Timestamp**: milliseconds since custom epoch (Jan 1, 2026 UTC)
 * **Machine ID**: identifies the node (0–1023)
 * **Sequence**: per-millisecond counter (0–4095)
-
----
 
 ## Usage
 
@@ -60,8 +56,6 @@ for _, id := range ids {
 }
 ```
 
----
-
 ## Auto Machine ID
 
 You can derive the machine ID from the system MAC address:
@@ -71,8 +65,6 @@ gen, err := globalid.NewGenerator(globalid.Config{
     AutoMachineID: true,
 })
 ```
-
----
 
 ## Parsing an ID
 
@@ -84,8 +76,6 @@ fmt.Println("Machine:", machineID)
 fmt.Println("Sequence:", sequence)
 ```
 
----
-
 ## Configuration Options
 
 ```go
@@ -96,8 +86,6 @@ type Config struct {
     WaitForTime   bool         // Wait instead of error on overflow
 }
 ```
-
----
 
 ## Error Handling
 
