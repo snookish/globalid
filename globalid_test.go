@@ -203,7 +203,7 @@ func TestMultipleMachines(t *testing.T) {
 	var wg sync.WaitGroup
 	idChan := make(chan int64, numMachines*idsPerMachine)
 
-	for machineID := 0; machineID < numMachines; machineID++ {
+	for machineID := range numMachines {
 		wg.Add(1)
 		go func(mid int) {
 			defer wg.Done()
@@ -249,8 +249,7 @@ func BenchmarkGenerate(b *testing.B) {
 		MachineID: 1,
 	})
 
-	b.ResetTimer()
-	for i := 0; i < b.N; i++ {
+	for b.Loop() {
 		_, _ = gen.Generate()
 	}
 }
