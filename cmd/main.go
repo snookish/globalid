@@ -25,6 +25,6 @@ func main() {
 	fmt.Printf("Generated ID: %d\n", id.ID())
 	fmt.Printf("Human readable: %s\n", id.GoString())
 
-	timestamp, machineID, sequence := globalid.ParseID(*id)
+	timestamp, machineID, sequence := id.Parse()
 	fmt.Printf("Timestamp: %s, Machine: %d, Sequence: %d\n", timestamp.Format(time.RFC3339), machineID, sequence)
 }

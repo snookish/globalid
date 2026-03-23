@@ -131,7 +131,6 @@ func (g *Generator) Generate() (*ID, error) {
 
 	g.lastTimestamp = timestamp
 
-	// Combine all components into final ID
 	// Layout: [1 bit sign][41 bits timestamp][10 bits machine][12 bits sequence]
 	id := (timestamp << timestampShift) | (g.machineID << machineIDShift) | g.sequence
 	return &ID{val: id}, nil
@@ -152,15 +151,6 @@ func (g *Generator) GenerateBatch(count int) ([]ID, error) {
 		ids[i] = *id
 	}
 	return ids, nil
-}
-
-// ParseID extracts the components from a generated ID
-func ParseID(id ID) (timestamp time.Time, machineID int64, sequence int64) {
-	sequence = id.val & maxSequence
-	machineID = (id.val >> machineIDShift) & maxMachineID
-	timestampMillis := (id.val >> timestampShift) + customEpoch
-	timestamp = time.Unix(0, timestampMillis*int64(time.Millisecond))
-	return
 }
 
 func (g *Generator) currentTimestamp() int64 {
@@ -205,12 +195,30 @@ func (id *ID) ID() int64 {
 }
 
 func (id *ID) String() string {
+	if id == nil {
+		return ""
+	}
 	return strconv.Itoa(int(id.val))
 }
 
 func (id *ID) GoString() string {
-	timestamp, machineID, sequence := ParseID(*id)
-	return fmt.Sprintf(
-		"ID{time: %s, machine: %d, seq: %d}", timestamp.Format(time.RFC3339), machineID, sequence,
-	)
+	if id == nil {
+		return ""
+	}
+	timestamp, machineID, sequence := id.Parse()
+	return fmt.Sprintf("ID{time: %s, machine: %d, seq: %d}", timestamp.Format(time.RFC3339), machineID, sequence)
+}
+
+// ParseID extracts the components from a generated ID
+func (id *ID) Parse() (time.Time, int64, int64) {
+	if id == nil {
+		return time.Time{}, 0, 0
+	}
+
+	sequence := id.val & maxSequence
+	machineID := (id.val >> machineIDShift) & maxMachineID
+	timestampMillis := (id.val >> timestampShift) + customEpoch
+	timestamp := time.Unix(0, timestampMillis*int64(time.Millisecond))
+
+	return timestamp, machineID, sequence
 }

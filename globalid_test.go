@@ -151,7 +151,7 @@ func TestParseID(t *testing.T) {
 	})
 
 	id, _ := gen.Generate()
-	timestamp, machineID, sequence := globalid.ParseID(*id)
+	timestamp, machineID, sequence := id.Parse()
 
 	if machineID != 42 {
 		t.Errorf("Expected machine ID 42, got %d", machineID)
